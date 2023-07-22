@@ -1,12 +1,11 @@
-﻿/* Задача 54: Задайте двумерный массив. Напишите программу, которая упорядочит по убыванию элементы каждой строки двумерного массива.
+﻿/* Задача 56: Задайте прямоугольный двумерный массив. Напишите программу, которая будет находить строку с наименьшей суммой элементов.
+
 Например, задан массив:
 1 4 7 2
 5 9 2 3
 8 4 2 4
-В итоге получается вот такой массив:
-7 4 2 1
-9 5 3 2
-8 4 4 2 */
+5 2 6 7
+Программа считает сумму элементов в каждой строке и выдаёт номер строки с наименьшей суммой элементов: 1 строка */
 
 Console.WriteLine("Укажите количество строк в дмумерном массиве: ");
 int rows = Convert.ToInt32(Console.ReadLine());
@@ -18,10 +17,9 @@ Console.WriteLine("Введите конечное значение:");
 int max = Convert.ToInt32(Console.ReadLine());
 
 int[,] array = CreateMatrixRndInt(rows, colums, min, max);
+int minRows= MinRowsMatrix(array) + 1;
 PrintMatrixInt(array);
-Console.WriteLine($"В итоге получается вот такой массив: ");
-array = SortColumsMatrix(array);
-PrintMatrixInt(array);
+Console.WriteLine($"Строка с наименьшей суммой элементов: {minRows}");
 
 int[,] CreateMatrixRndInt(int rows, int colums, int min, int max)
 {
@@ -35,25 +33,29 @@ int[,] CreateMatrixRndInt(int rows, int colums, int min, int max)
     }
     return array;
 }
-int[,] SortColumsMatrix(int[,] array)
+int MinRowsMatrix(int[,] array)
 {
+    int min = 0;
     int count = 0;
-    for (int i = 0; i < array.GetLength(0); i++)
+    int countRows = 0;
+    for (int j = 0; j < array.GetLength(1); j++)
+    {
+        min += array[0, j];
+    }
+    for (int i = 1; i < array.GetLength(0); i++)
     {
         for (int j = 0; j < array.GetLength(1); j++)
         {
-            for (int k = 0; k < array.GetLength(1) - 1; k++)
-            {
-                if (array[i, k] < array[i, k + 1])
-                {
-                    count = array[i, k];
-                    array[i, k] = array[i, k + 1];
-                    array[i, k + 1] = count;
-                }
-            }
+            count += array[i, j];
         }
+        if (min > count)
+        {
+            min = count;
+            countRows = i;
+        }
+        count = 0;
     }
-    return array;
+    return countRows;
 }
 void PrintMatrixInt(int[,] array, int round = 1)
 {
